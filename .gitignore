@@ -3,6 +3,7 @@
 .vscode/
 build/*
 monitor/
+cmake-build-debug/
 
 # files
 *.o
