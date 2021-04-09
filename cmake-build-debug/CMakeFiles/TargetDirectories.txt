@@ -1,0 +1,3 @@
+/home/nazarja/Code/c++/cpp-linux-system-monitor/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/nazarja/Code/c++/cpp-linux-system-monitor/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/nazarja/Code/c++/cpp-linux-system-monitor/cmake-build-debug/CMakeFiles/monitor.dir
