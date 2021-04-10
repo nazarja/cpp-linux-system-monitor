@@ -70,7 +70,7 @@ string LinuxParser::Kernel()
 {
     string os, version, kernel;
     string line;
-    std::ifstream stream(kProcDirectory + kVersionFilename);
+    std::ifstream stream(LinuxParser::kProcDirectory + LinuxParser::kVersionFilename);
     
     if (stream.is_open())
     {
@@ -78,11 +78,9 @@ string LinuxParser::Kernel()
         std::istringstream linestream(line);
         linestream >> os >> version >> kernel;
     }
-    
     return kernel;
 };
 
-// BONUS: Update this to use std::filesystem
 vector<int> LinuxParser::Pids()
 {
     vector<int> pids;
@@ -103,13 +101,27 @@ vector<int> LinuxParser::Pids()
             }
         }
     }
-    
     closedir(directory);
     return pids;
 };
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; };
+// without cached memory excluding cached memory
+float LinuxParser::MemoryUtilization()
+{
+    auto get_value = [](std::string value)
+    {
+        return std::stof(
+                LinuxParser::GetStatValue(
+                        LinuxParser::kProcDirectory+LinuxParser::kMeminfoFilename, value));
+    };
+
+    float total {get_value("MemTotal:")};
+    float free {get_value("MemFree:")};
+    float buffers {get_value("Buffers:")};
+    float cached {get_value("Cached:")};
+
+    return ((total - free) - (buffers + cached)) / total;
+};
 
 long LinuxParser::UpTime() {
     std::ifstream filestream(LinuxParser::kProcDirectory + LinuxParser::kUptimeFilename);

@@ -6,7 +6,11 @@
 std::string Format::ElapsedTime(long seconds)
 {
     std::string formatted_time {""};
-    std::vector<long> digits {(seconds / 3600), ((seconds % 3600) / 60), (seconds % 60)}; // hours, minutes, seconds
+    std::vector<long> digits {
+        seconds / 3600, // hours
+        seconds % 3600 / 60, // minutes
+        seconds % 60 // seconds
+    };
 
     int i {0};
     for (long digit : digits) {
