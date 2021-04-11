@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "linux_parser.h"
 
@@ -36,6 +37,15 @@ std::string LinuxParser::GetStatValue(std::string filepath, std::string param)
         }
     }
     return return_value;
+};
+
+std::string LinuxParser::GetFileFirstLine(std::string filepath)
+{
+    std::ifstream filestream(filepath);
+    std::string line {""};
+
+    if (filestream.is_open()) std::getline(filestream, line);
+    return line;
 };
 
 string LinuxParser::OperatingSystem()
@@ -140,18 +150,26 @@ long LinuxParser::UpTime() {
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; };
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; };
-
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; };
 
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return 0; };
 
-// TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; };
+std::map<std::string, float> LinuxParser::CpuUtilization() {
+    std::string line{LinuxParser::GetFileFirstLine(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)};
+    std::map<std::string, float> states;
+
+    std::istringstream linestream(line);
+    std::string value;
+
+    for (std::string key : {"user", "nice", "system", "idle", "iowait", "irq", "softirq", "steal"})
+    {
+        linestream >> value;
+        if (value != "cpu") states[key] = std::stof(value);
+    }
+    return states;
+};
 
 int LinuxParser::TotalProcesses() {
     return std::stoi(
@@ -167,6 +185,10 @@ int LinuxParser::RunningProcesses()
                     LinuxParser::kProcDirectory + LinuxParser::kStatFilename, "procs_running"
                     ));
 };
+
+// TODO: Read and return the number of active jiffies for a PID
+// REMOVE: [[maybe_unused]] once you define the function
+long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; };
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function

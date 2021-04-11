@@ -4,6 +4,8 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <map>
+#include <vector>
 
 namespace LinuxParser
 {
@@ -29,6 +31,7 @@ namespace LinuxParser
     std::string Kernel();
     void GetMemInfo(std::string filepath);
     std::string GetStatValue(std::string filepath, std::string param);
+    std::string GetFileFirstLine(std::string filepath);
 
     // CPU
     enum CPUStates
@@ -45,7 +48,7 @@ namespace LinuxParser
         kGuestNice_
     };
 
-    std::vector<std::string> CpuUtilization();
+    std::map<std::string, float> CpuUtilization();
     long Jiffies();
     long ActiveJiffies();
     long ActiveJiffies(int pid);
