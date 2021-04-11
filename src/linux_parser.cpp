@@ -163,7 +163,7 @@ std::map<std::string, float> LinuxParser::CpuUtilization() {
     std::istringstream linestream(line);
     std::string value;
 
-    for (std::string key : {"user", "nice", "system", "idle", "iowait", "irq", "softirq", "steal"})
+    for (std::string key : LinuxParser::jiffy_keys)
     {
         linestream >> value;
         if (value != "cpu") states[key] = std::stof(value);

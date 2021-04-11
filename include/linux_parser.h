@@ -20,6 +20,7 @@ namespace LinuxParser
     const std::string kVersionFilename{"/version"};
     const std::string kOSPath{"/etc/os-release"};
     const std::string kPasswordPath{"/etc/passwd"};
+    const std::string jiffy_keys[] {"user", "nice", "system", "idle", "iowait", "irq", "softirq", "steal"};
 
     // System
     float MemoryUtilization();

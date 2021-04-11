@@ -9,6 +9,7 @@ class Processor
     public:
         float Utilization();
 
+
     private:
         std::map<std::string, float> previous {
             {"user", 0.0}, {"nice", 0.0},
@@ -16,6 +17,9 @@ class Processor
             {"iowait", 0.0}, {"irq", 0.0},
             {"softirq", 0.0}, {"steal", 0.0}
         };
+
+        const std::string jiffy_keys[6] {"user", "nice", "system", "irq", "softirq", "steal"};
+
 };
 
 #endif

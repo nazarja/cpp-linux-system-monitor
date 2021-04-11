@@ -1,13 +1,11 @@
 #include <string>
 #include <map>
 
-#include "processor.h"
 #include "linux_parser.h"
-
+#include "processor.h"
 
 float Processor::Utilization() {
     std::map<std::string, float> current = LinuxParser::CpuUtilization();
-    std::string keys[] {"user", "nice", "system", "irq", "softirq", "steal"};
 
     float prev_idle { previous["idle"] + previous["iowait"] };
     float curr_idle { current["idle"] + current["iowait"] };;
@@ -17,7 +15,7 @@ float Processor::Utilization() {
 
     for (int i = 0; i < 2; i++)
     {
-        for (std::string key : keys)
+        for (std::string key : Processor::jiffy_keys)
         {
             i == 0 ? prev_non_idle += previous[key] : curr_non_idle += current[key];
         }
