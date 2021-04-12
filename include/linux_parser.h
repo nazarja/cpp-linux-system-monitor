@@ -30,9 +30,8 @@ namespace LinuxParser
     int RunningProcesses();
     std::string OperatingSystem();
     std::string Kernel();
-    void GetMemInfo(std::string filepath);
     std::string GetStatValue(std::string filepath, std::string param);
-    std::string GetFileFirstLine(std::string filepath);
+    std::string GetFileAsString(std::string filepath);
 
     // CPU
     enum CPUStates

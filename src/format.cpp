@@ -5,7 +5,7 @@
 
 std::string Format::ElapsedTime(long seconds)
 {
-    std::string formatted_time {""};
+    std::string formatted_time;
     std::vector<long> digits {
         seconds / 3600, // hours
         seconds % 3600 / 60, // minutes
