@@ -17,6 +17,7 @@ class Process
         bool operator>(Process const &a) const;
 
     private:
+        // set process id to easily pass to LinuxParser functions as needed argument
         int pid;
 };
 
