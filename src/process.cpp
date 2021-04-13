@@ -13,7 +13,7 @@ using std::vector;
 
 int Process::Pid() { return this->pid; };
 
-float Process::CpuUtilization() { return 0.0; };
+float Process::CpuUtilization() const { return LinuxParser::ProcessCpuUtilisation(this->pid); };
 
 string Process::Command() { return LinuxParser::Command(this->pid); };
 
@@ -23,5 +23,4 @@ string Process::User() { return LinuxParser::User(this->pid); };
 
 long int Process::UpTime() { return LinuxParser::UpTime(this->pid); };
 
-// TODO: Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process const &a [[maybe_unused]]) const { return true; };
+bool Process::operator>(Process const &a ) const { return CpuUtilization() > a.CpuUtilization(); };

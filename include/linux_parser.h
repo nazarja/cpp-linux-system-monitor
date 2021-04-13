@@ -55,6 +55,7 @@ namespace LinuxParser
     long IdleJiffies();
 
     // Processes
+    float ProcessCpuUtilisation(int pid);
     std::string Command(int pid);
     std::string Ram(int pid);
     std::string Uid(int pid);

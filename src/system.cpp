@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "process.h"
 #include "processor.h"
@@ -18,7 +19,10 @@ Processor &System::Cpu() { return cpu_; };
 
 vector<Process> &System::Processes()
 {
+    processes_.clear();
     for (int pid : LinuxParser::Pids()) processes_.emplace_back(Process(pid));
+
+    std::sort(processes_.begin(), processes_.end(), [](Process &a, Process &b) -> bool { return a > b;});
     return processes_;
 };
 

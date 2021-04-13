@@ -235,7 +235,14 @@ std::string LinuxParser::User(int pid)
             std::replace(line.begin(), line.end(), ':', ' ');
             std::istringstream linestream(line);
 
-            while (linestream >> user >> x >> user_uid) if (user_uid == uid) return user;
+            while (linestream >> user >> x >> user_uid)
+            {
+                 if (user_uid == uid) {
+                     return user.length() > 6
+                        ? user.substr(0, 6)
+                        : user;
+                 }
+            }
         }
     }
     return std::string();
@@ -252,7 +259,48 @@ long LinuxParser::UpTime(int pid)
 
     while(linestream >> value && ++counter)
     {
-        if (counter == 22) return LinuxParser::UpTime() - std::stol(value);
+        if (counter == 22)
+            return LinuxParser::UpTime() - (std::stol(value) / sysconf(_SC_CLK_TCK));
     }
     return 0;
+};
+
+
+float LinuxParser::ProcessCpuUtilisation(int pid)
+{
+    std::string fileline = LinuxParser::GetFileAsString(LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatFilename);
+    std::istringstream linestream(fileline);
+    std::map<std::string, long> values;
+    std::string value;
+    short count {-1};
+
+    while(linestream >> value)
+    {
+        if (++count >= 22) break;
+        switch(count)
+        {
+            case 13:
+                values["utime"] = std::stol(value);
+                break;
+            case 14:
+                values["stime"] = std::stol(value);
+                break;
+            case 15:
+                values["cutime"] = std::stol(value);
+                break;
+            case 16:
+                values["cstime"] = std::stol(value);
+                break;
+            case 21:
+                values["starttime"] = std::stol(value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    long total_time = (values["utime"]+values["stime"]+values["cutime"]+values["cstime"]);
+    float seconds = LinuxParser::UpTime() - (values["starttime"] / sysconf(_SC_CLK_TCK));
+
+    return  ((total_time / sysconf(_SC_CLK_TCK)) / seconds);
 };
